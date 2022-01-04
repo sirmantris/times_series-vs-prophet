@@ -16,8 +16,6 @@ We can also visualize our data using a method called *time-series decomposition*
 2.	**Seasonality:** The optional repeating patterns or cycles of behavior over time.
 3.	**Noise:** The optional variability in the observations that cannot be explained by the model.
 
-![Trend](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/trend%20graph.PNG)
-
 Assumptions can be made about these components both in behavior and in how they are combined, which allows them to be modelled using traditional statistical methods. These components may also be the most effective way to make predictions about future values, but not always.
 
 1.	**Frequency:** Perhaps data is provided at a frequency that is too high to model or is unevenly spaced through time requiring resampling for use in some models.
@@ -26,19 +24,10 @@ Assumptions can be made about these components both in behavior and in how they 
 
 Often time series problems are real-time, continually providing new opportunities for prediction. This adds an honesty to time series forecasting that quickly flushes out bad assumptions and errors in modelling.
 
-##Actual Plot
-![Actual plot](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/actual%20dataset%20plot.PNG)
-
-### Dealing with Missing values:
-![missing](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/filled%20missing%20values%20with%20zeroes.PNG)
-
-
 *Stationarity* is defined using very strict criterion. However, for practical purposes we can assume the series to be stationary if it has constant statistical properties over time, i.e,
 1.	**constant mean**
 2.	**constant variance**
 3.	**An autocovariance that does not depend on time.**
-
-![Residual mean](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/Seasonal_Decompose.PNG)
 
 ## Forecasting using ARIMA Model:
 
@@ -52,14 +41,12 @@ An importance concern here is how to determine the value of ‘p’ and ‘q’.
 
 1. **Autocorrelation Function (ACF):** It is a measure of the correlation between the TS with a lagged version of itself. For instance at lag 5, ACF would compare series at time instant ‘t1’…’t2’ with series at instant ‘t1-5’…’t2-5’ (t1-5 and t2 being end points).
 
-![Autocorrelation](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/auto%20correlation%20plot.PNG)
 
 2. **Partial Autocorrelation Function (PACF):** This measures the correlation between the TS with a lagged version of itself but after eliminating the variations already explained by the intervening comparisons. Eg at lag 5, it will check the correlation but remove the effects already explained by lags 1 to 4.
 
 
 The equation denoted below is for ARIMA model. It is a combination of AR model and MA model.
 
-![Eqn Arima](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20Eqn%20for%20ARIMA.png)
 
 **Stationary Series**
 One of the requirements for ARIMA is that the time series should be stationary. A stationary series is one where the properties do not change over time. There are several methods to check the stationarity of a series. The one you’ll use in this project is the Augmented Dickey-Fuller test.
@@ -67,16 +54,12 @@ One of the requirements for ARIMA is that the time series should be stationary. 
 **Augmented Dickey-Fuller Test**
 The Augmented Dickey-Fuller test is a type of statistical unit root test. The test uses an autoregressive model and optimizes an information criterion across multiple different lag values.
 
-![Augmented test](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20Augmented%20dicker-fuller%20test.PNG)
-
 The null hypothesis of the test is that the time series is not stationary, while the alternate hypothesis (rejecting the null hypothesis) is that the time series is stationary.
 
 The first step is to import the adfuller module from the statsmodels package. This is done in the first line of code below. The second line performs and prints the p-value of the test.
 
 The output above shows that the p-value is greater than the significance level of 0.05, so we fail to reject the null hypothesis. The series is not stationary and requires differencing.
 
-![differenciate](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20Diff%20fxn.PNG
-)
 
 The series can be differenced using the diff() function. The first line of code above performs the first order differencing, while the second line performs the Augmented Dickey-Fuller Test.
 
@@ -93,7 +76,6 @@ The time-series to fit the ARIMA model contains parameters as:
 
 The second step is to define a function that takes in the time series array and returns the auto-arima model. 
 
-![Auto_arima](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20best%20model%20for%20arima.PNG)
 
 The output above shows that the final model fitted was an ARIMA(0,1,0) estimator, where the values of the parameters p, d, and q were zero, one, and zero, respectively. The auto_arima functions tests the time series with different combinations of p, d, and q using AIC as the criterion. 
 
@@ -109,8 +91,6 @@ This model still forms the basis of many time series decomposition methods, so i
 
 The estimate of the trend-cycle at time t is obtained by averaging values of the time series within k periods of t. Observations that are nearby in time are also likely to be close in value. Therefore, the average eliminates some of the randomness in the data, leaving a smooth trend-cycle component. We call this an m-MA, meaning a moving average of order m.
 
-![Moving avg](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20Moving%20average%20model.PNG)
-
 The output graph consists of the Rolling mean trend with the upper bound and lower bound.
 
 The order of the moving average determines the smoothness of the trend-cycle estimate. In general, a larger order means a smoother curve.
@@ -120,17 +100,13 @@ The order of the moving average determines the smoothness of the trend-cycle est
 Forecasts produced using exponential smoothing methods are weighted averages of past observations, with the weights decaying exponentially as the observations get older. The simplest of the exponentially smoothing methods is naturally called simple exponential smoothing (SES). This method is suitable for forecasting data with no clear trend or seasonal pattern.
 
 
-We often want something between these two extremes. For example, it may be sensible to attach larger weights to more recent observations than to observations from the distant past. This is exactly the concept behind simple exponential smoothing. Forecasts are calculated using weighted averages, where the weights decrease exponentially as observations come from further in the past — the smallest weights are associated with the oldest observations:
-
-![Exp](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20exponential%20eqn.PNG)
+We often want something between these two extremes. For example, it may be sensible to attach larger weights to more recent observations than to observations from the distant past. This is exactly the concept behind simple exponential smoothing. Forecasts are calculated using weighted averages, where the weights decrease exponentially as observations come from further in the past — the smallest weights are associated with the oldest observations.
 
 The one-step-ahead forecast for time T+1 is a weighted average of all of the observations in the series y1,…,yT. The rate at which the weights decrease is controlled by the parameter α.
 
 For any α between 0 and 1, the weights attached to the observations decrease exponentially as we go back in time, hence the name “exponential smoothing.” If α is small (i.e., close to 0), more weight is given to observations from the more distant past. If α is large (i.e., close to 1), more weight is given to the more recent observations. For the extreme case where α=1 forecasts are equal to the naïve forecasts.
 
 **Predicted graph when α = 0.5 (Most optimised value)**
-
-![Exp smooth graph](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/exponential%20smoothing%20graph.PNG)
 
 It can be seen that exponential smoothing doesn’t fit well for the given dataset.
 
@@ -141,21 +117,13 @@ Croston method forecasts the non-zero demand size and the inter-arrival time bet
 
 We consider the following notation: Y(t) is the estimate of the mean size of a nonzero demand at time t, P(t) is the estimate of the mean interval between nonzero demands at time t, X(t) is the actual demand at time t, Q is the time interval since the last nonzero demand and α is the smoothing constant.
 
-Croston forecasting method updates values of Y(t) and P(t)according to the procedure shown in figure:
-
-![crost](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/croston%20flowchart.PNG)
-
 Output of croston model representing Actual demand vs Predicted/Forecasted Demand.
-
-![crost output](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20Croston%20actual%20vs%20predicted%20table.PNG)
 
 ## Forecasting using FB PROPHET
 
 The ARIMA approach works decently well with stationary data and when forecasting short time frames, but Facebook’s engineers have built a tool for those cases which ARIMA can’t handle. Prophet is built with its backend in STAN, a probabilistic coding language. This allows Prophet to have many of the advantages offered by Bayesian statistics, including seasonality, the inclusion of domain knowledge, and confidence intervals to add a data-driven estimate of risk.
 
-Prophet follows the sklearn model API. It allows to create an instance of the Prophet class and then call its fit and predict methods. Prophet requires time series data to have a minimum of two columns: ds which is the time stamp and y which is the values. After loading our data, we need to format it as such:
-
-![fb](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/done%20ds%2C%20y.PNG)
+Prophet follows the sklearn model API. It allows to create an instance of the Prophet class and then call its fit and predict methods. Prophet requires time series data to have a minimum of two columns: ds which is the time stamp and y which is the values. 
 
 The model is fit by instantiating a new Prophet object. Any settings to the forecasting procedure are passed into the constructor. Then call its fit method and pass in the historical dataframe. Fitting should take 1-5 seconds.
 
@@ -185,5 +153,4 @@ Prophet model is fit using Stan, and have implemented the core of the Prophet pr
 Output for FB Prophet:
 •	The predict method will assign each row in future a predicted value which it names yhat. If the historical dates are passed, it will provide an in-sample fit. The forecast object here is a new dataframe that includes a column yhat with the forecast, as well as columns for components and uncertainty intervals.
 
-![prophet](https://github.com/sujikathir/Intermittent-demand-forecasting/blob/main/Images/graph%20output%20fbprophet.PNG)
 
